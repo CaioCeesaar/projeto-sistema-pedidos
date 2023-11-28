@@ -18,7 +18,12 @@ public class ApplicationContext : DbContext
         optionsBuilder
             .UseLoggerFactory(_logger)
             .EnableSensitiveDataLogging()
-            .UseSqlServer("Data Source=DESKTOP-747LPER;Initial Catalog=CursoEFCore;Integrated Security=true;TrustServerCertificate=True;User Id = DESKTOP-747LPER");
+            .UseSqlServer("Data Source=DESKTOP-747LPER;Initial Catalog=CursoEFCore;Integrated Security=true;TrustServerCertificate=True;User Id = DESKTOP-747LPER", 
+                p=>p.EnableRetryOnFailure(
+                    maxRetryCount: 2,
+                    maxRetryDelay: TimeSpan.FromSeconds(5), 
+                    errorNumbersToAdd: null)
+                    .MigrationsHistoryTable("curso_ef_core"));
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,7 +39,21 @@ public class ApplicationContext : DbContext
         // que irá buscar todas as classes que implementam a interface IEntityTypeConfiguration
         // e irá aplicar as configurações de cada uma delas.
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+        MapearPropriedadesEsquecidas(modelBuilder);
     }
     
-    
+    private void MapearPropriedadesEsquecidas(ModelBuilder modelBuilder)
+    {
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            var properties = entity.GetProperties().Where(p => p.ClrType == typeof(string));
+            foreach (var property in properties)
+            {
+                if (string.IsNullOrEmpty(property.GetColumnType()) && !property.GetMaxLength().HasValue) 
+                {
+                    property.SetColumnType("VARCHAR(100)");
+                }
+            }
+        }
+    }
 }
