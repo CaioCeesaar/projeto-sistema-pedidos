@@ -91,3 +91,9 @@ EFCore/EFCore/obj/project.packagespec.json
 EFCore/EFCore/obj/rider.project.model.nuget.info
 EFCore/EFCore/obj/rider.project.restore.info
 EFCore/EFCore.sln
+EFCore/EFCore/bin/Debug/net7.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll
+EFCore/EFCore/bin/Debug/net7.0/Microsoft.Extensions.Logging.Console.dll
+EFCore/EFCore/bin/Debug/net7.0/Microsoft.Extensions.Logging.Configuration.dll
+EFCore/EFCore/bin/Debug/net7.0/Microsoft.Extensions.Configuration.dll
+EFCore/EFCore/bin/Debug/net7.0/Microsoft.Extensions.Configuration.Binder.dll
+EFCore/.idea/.idea.EFCore/.idea/vcs.xml

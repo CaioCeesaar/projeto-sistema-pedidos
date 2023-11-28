@@ -1,15 +1,24 @@
 ﻿using EFCore.Data.Configuration;
 using EFCore.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 public class ApplicationContext : DbContext
 {
+    private static readonly ILoggerFactory _logger = 
+        LoggerFactory.Create(p => p.AddConsole());
+    
     public DbSet<Pedido> Pedidos { get; set; }
+    public DbSet<Produto> Produtos { get; set; }
+    public DbSet<Cliente> Clientes { get; set; }
     
     // DbContextOptionBuilder -> é através dele que informamos o provider que iremos utilizar
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("Data Source=DESKTOP-747LPER;Initial Catalog=CursoEFCore;Integrated Security=true;TrustServerCertificate=True;User Id = DESKTOP-747LPER");
+        optionsBuilder
+            .UseLoggerFactory(_logger)
+            .EnableSensitiveDataLogging()
+            .UseSqlServer("Data Source=DESKTOP-747LPER;Initial Catalog=CursoEFCore;Integrated Security=true;TrustServerCertificate=True;User Id = DESKTOP-747LPER");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
